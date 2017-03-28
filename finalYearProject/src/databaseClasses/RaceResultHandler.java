@@ -74,7 +74,31 @@ public class RaceResultHandler
 				b = true;
 			}
 			//System.out.println("(raceResulthandler/getResults)noSplits = "+noSplits);
-		}		
+		}	
+	    cc1.closeConnection();
+		return b;
+	}
+	
+	public Boolean searchForRaceIdInOveralls(String raceIdIn) throws Exception
+	{		
+		Boolean b = false;
+		
+		conn = cc1.openConnection();	   	    
+	    PreparedStatement searchRaceId = null;	
+	   
+	    String searchRaceIdString = "select DISTINCT(race_id) FROM athlete_race_result";
+	    searchRaceId= conn.prepareStatement(searchRaceIdString);
+	    rs1 = searchRaceId.executeQuery();  
+	    
+	    while(rs1.next())
+		{
+			if(raceIdIn.equals(rs1.getInt(1)+""))
+			{
+				b = true;
+			}
+			//System.out.println("(raceResulthandler/getResults)noSplits = "+noSplits);
+		}	
+	    cc1.closeConnection();
 		return b;
 	}
 	
@@ -177,17 +201,100 @@ public class RaceResultHandler
 	}
 	
 	public void loadOverallResultsFromCSV(String filePathIn)throws Exception
-	{
-		conn = cc1.openConnection();	  	    
-	    PreparedStatement loadCSV = null;	
-	  
-	    String loadCSVstring = "LOAD DATA LOCAL INFILE '" + filePathIn
-				+ "' INTO TABLE athlete_race_result FIELDS TERMINATED BY ','"
-				+ " LINES TERMINATED BY '\n' "
-				+ "IGNORE 1 LINES"
-				+ "(athlete_race_no, race_id, position, ath_name,ath_start_time,overall_time,series_ath_id) ";
-	    loadCSV= conn.prepareStatement(loadCSVstring);
-	    loadCSV.execute();  
+	{	
+		Boolean correctOverallsFile = true; //boolean flag variable
+		Boolean firstNonHeaderLine = true; //boolean flag variable
+		Boolean overallsExistInDatabase = false; //boolean flag variable
+		String raceId = "";
+		
+		String csvFile = filePathIn;
+        String line = "";
+        String csvSplitBy = ",";
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) 
+        {
+        	int lineCounter = 0;
+            while ((line = br.readLine())!=null ) 
+            {  
+                // use comma as separator
+                String[] result = line.split(csvSplitBy);
+                
+                if(lineCounter == 0) //checking first line is column headers in correct order
+                {
+                	if(result[0].equals("athlete_race_no")&& result[1].equals("race_id")&&
+                		result[2].equals("position")&& result[3].equals("ath_name")&&
+                		result[4].equals("ath_start_time")&& result[5].equals("overall_time")&&result[6].equals("series_ath_id"))
+                	{
+                		System.out.println("correctMatch");
+                	}
+                	else
+                	{
+                		//System.out.println("InvalidMatch now breaking");
+                		JOptionPane.showMessageDialog(null, "Invalid column headers!!.");
+                		correctOverallsFile = false; //invalid headers = non-valid file
+                		break; //break out of file read
+                	}               	
+                }
+                else
+                {
+	                if(result.length > 0)//not a blank line
+	                {
+	                	if(firstNonHeaderLine == true)//if read line is the first non-header
+	                	{
+	                		raceId = result[1]; //get raceID
+	                		System.out.println("race id = "+raceId);
+	                		firstNonHeaderLine = false; //mark first non-header line as read
+	                		//////////////////////////////////////////////////////////////////////
+	                		//check if race-id already in database split results here!!!!!////////
+	                		//////////////////////////////////////////////////////////////////////
+	                		overallsExistInDatabase = searchForRaceIdInOveralls(raceId);
+	                		if(overallsExistInDatabase == true)
+	                		{
+	                			JOptionPane.showMessageDialog(null, "overall results with race id "+raceId+" already exist in database overall results.");
+	                			correctOverallsFile = false; //raceId already existing in database = non-valid file
+	                			break; //break out of file read
+	                		}
+	                		
+	                	}
+	                	else //all file lines after the first non-header line
+	                	{
+	                		//System.out.println("race id = "+raceId+", result[0] = "+result[0]);
+	                		if(!result[1].equals(raceId))//if raceID found not to match the first raceID break from loop
+	                		{
+	                			//System.out.println("Non Matching raceIds, now breaking");
+	                    		JOptionPane.showMessageDialog(null, "Non-matching race ID's found in file!!.");
+	                    		correctOverallsFile = false; //invalid raceIDs = non-valid file
+	                			break; //break out of file read
+	                		}
+	                	}	                		                	
+	                }
+	                else
+	                {
+	                	System.out.println("noValue");
+	                }
+                }
+                lineCounter++;
+            }//end of while loop
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        if(correctOverallsFile == true)//only if correctly formatted file perform upload
+		{
+			conn = cc1.openConnection();	  	    
+		    PreparedStatement loadCSV = null;	
+		  
+		    String loadCSVstring = "LOAD DATA LOCAL INFILE '" + filePathIn
+					+ "' INTO TABLE athlete_race_result FIELDS TERMINATED BY ','"
+					+ " LINES TERMINATED BY '\n' "
+					+ "IGNORE 1 LINES"
+					+ "(athlete_race_no, race_id, position, ath_name,ath_start_time,overall_time,series_ath_id) ";
+		    loadCSV= conn.prepareStatement(loadCSVstring);
+		    loadCSV.execute();  
+		    JOptionPane.showMessageDialog(null, "Race overall result successfully added to database.");
+		}
 	}
 	
 	public void editAthletePoints(int raceIdIn,int athNoIn,double pointsIn) throws Exception

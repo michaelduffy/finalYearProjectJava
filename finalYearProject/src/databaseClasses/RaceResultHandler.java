@@ -3,6 +3,10 @@ package databaseClasses;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.JOptionPane;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -37,9 +41,13 @@ public class RaceResultHandler
 	
 	private PreparedStatement getNoSplits = null;	
 	private String getNoSplitsString;
+	
+	private PreparedStatement searchRaceId = null;	
+	private String searchRaceIdString;
 			
 	private ResultSet rs1;
 	private ConnectionClass cc1;
+	
 	
 	public RaceResultHandler(String ipIn,String dbNameIn,String dbUserIn,String dbPassIn,
 							String username, String userPass)
@@ -48,38 +56,124 @@ public class RaceResultHandler
 		//raceIdExists = false;
 	}
 	
+	public Boolean searchForRaceIdInSplits(String raceIdIn) throws Exception
+	{		
+		Boolean b = false;
+		
+		conn = cc1.openConnection();	   	    
+	    PreparedStatement searchRaceId = null;	
+	   
+	    String searchRaceIdString = "select DISTINCT(race_id) FROM race_split_result";
+	    searchRaceId= conn.prepareStatement(searchRaceIdString);
+	    rs1 = searchRaceId.executeQuery();  
+	    
+	    while(rs1.next())
+		{
+			if(raceIdIn.equals(rs1.getInt(1)+""))
+			{
+				b = true;
+			}
+			//System.out.println("(raceResulthandler/getResults)noSplits = "+noSplits);
+		}		
+		return b;
+	}
+	
 	
 	public void loadSplitsFromCSV(String filePathIn)throws Exception
-	{
-		/*String csvFile = "/Users/mkyong/csv/country.csv";
+	{		
+		Boolean correctSplitsFile = true; //boolean flag variable
+		Boolean firstNonHeaderLine = true; //boolean flag variable
+		Boolean splitsExistInDatabase = false; //boolean flag variable
+		String raceId = "";
+		
+		String csvFile = filePathIn;
         String line = "";
-        String cvsSplitBy = ",";
+        String csvSplitBy = ",";
 
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-
-            while ((line = br.readLine()) != null) {
-
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) 
+        {
+        	int lineCounter = 0;
+            while ((line = br.readLine())!=null ) 
+            {  
                 // use comma as separator
-                String[] country = line.split(cvsSplitBy);
-
-                System.out.println("Country [code= " + country[4] + " , name=" + country[5] + "]");
-
-            }
+                String[] result = line.split(csvSplitBy);
+                
+                if(lineCounter == 0) //checking first line is column headers in correct order
+                {
+                	if(result[0].equals("race_id")&& result[1].equals("athlete_race_no")&&
+                		result[2].equals("split_order")&& result[3].equals("split_name")&&
+                		result[4].equals("split_time")&& result[5].equals("split_type_id"))
+                	{
+                		System.out.println("correctMatch");
+                	}
+                	else
+                	{
+                		//System.out.println("InvalidMatch now breaking");
+                		JOptionPane.showMessageDialog(null, "Invalid column headers!!.");
+                		correctSplitsFile = false; //invalid headers = non-valid file
+                		break; //break out of file read
+                	}               	
+                }
+                else
+                {
+	                if(result.length > 0)//not a blank line
+	                {
+	                	if(firstNonHeaderLine == true)//if read line is the first non-header
+	                	{
+	                		raceId = result[0]; //get raceID
+	                		System.out.println("race id = "+raceId);
+	                		firstNonHeaderLine = false; //mark first non-header line as read
+	                		//////////////////////////////////////////////////////////////////////
+	                		//check if race-id already in database split results here!!!!!////////
+	                		//////////////////////////////////////////////////////////////////////
+	                		splitsExistInDatabase = searchForRaceIdInSplits(raceId);
+	                		if(splitsExistInDatabase == true)
+	                		{
+	                			JOptionPane.showMessageDialog(null, "split results with race id "+raceId+" already exist in database split results.");
+	                			correctSplitsFile = false; //raceId already existing in database = non-valid file
+	                			break; //break out of file read
+	                		}
+	                		
+	                	}
+	                	else //all file lines after the first non-header line
+	                	{
+	                		//System.out.println("race id = "+raceId+", result[0] = "+result[0]);
+	                		if(!result[0].equals(raceId))//if raceID found not to match the first raceID break from loop
+	                		{
+	                			//System.out.println("Non Matching raceIds, now breaking");
+	                    		JOptionPane.showMessageDialog(null, "Non-matching race ID's found in file!!.");
+	                    		correctSplitsFile = false; //invalid raceIDs = non-valid file
+	                			break; //break out of file read
+	                		}
+	                	}	                		                	
+	                }
+	                else
+	                {
+	                	System.out.println("noValue");
+	                }
+                }
+                lineCounter++;
+            }//end of while loop
 
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
-		//ConnectionClass cc1 = new ConnectionClass("localhost","project_database","root",""); 
-	    conn = cc1.openConnection();	   	    
-	    PreparedStatement loadCSV = null;	
-	   
-	    String loadCSVstring = "LOAD DATA LOCAL INFILE '" + filePathIn
-				+ "' INTO TABLE race_split_result FIELDS TERMINATED BY ','"
-				+ " LINES TERMINATED BY '\n' "
-				+ "IGNORE 1 LINES"
-				+ "(race_id, athlete_race_no, split_order, split_name, split_time, split_type_id) ";
-	    loadCSV= conn.prepareStatement(loadCSVstring);
-	    loadCSV.execute();  
+        }
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+		if(correctSplitsFile == true)//only if correctly formatted file perform upload
+		{
+		    conn = cc1.openConnection();	   	    
+		    PreparedStatement loadCSV = null;	
+		   
+		    String loadCSVstring = "LOAD DATA LOCAL INFILE '" + filePathIn
+					+ "' INTO TABLE race_split_result FIELDS TERMINATED BY ','"
+					+ " LINES TERMINATED BY '\n' "
+					+ "IGNORE 1 LINES"
+					+ "(race_id, athlete_race_no, split_order, split_name, split_time, split_type_id) ";
+		    loadCSV= conn.prepareStatement(loadCSVstring);
+		    loadCSV.execute();  
+		    JOptionPane.showMessageDialog(null, "Race split results successfully added to database.");
+		}
 	}
 	
 	public void loadOverallResultsFromCSV(String filePathIn)throws Exception

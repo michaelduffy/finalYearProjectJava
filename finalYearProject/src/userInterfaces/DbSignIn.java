@@ -81,7 +81,6 @@ public class DbSignIn extends JFrame
 						DbSignIn.this.dispose();
 					}
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					validDB = false;
 					JOptionPane.showMessageDialog(null, "Incorect credentials entered");
 					//e.printStackTrace();

@@ -5,11 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Date;
 
-import javax.swing.JOptionPane;
-
 import classes.Athlete;
-import classes.Director;
-import classes.Race;
 
 
 public class AthleteHandler 
@@ -20,28 +16,11 @@ public class AthleteHandler
 	private PreparedStatement getAthletes = null;	
 	private String getAthletesString;
 	
-	//private PreparedStatement getAthId = null;	
-	//private String getAthIdString;
-	
-	//private PreparedStatement getUserRaceIds = null;	
-	//private String getUserRaceIdsString;
-	
-	//private PreparedStatement getUserRaces = null;	
-	//private String getUserRacesString;
-	
 	private PreparedStatement deleteAth = null;	
 	private String deleteAthString;
 	
 	private PreparedStatement editAth = null;	
 	private String editAthString;
-	
-	//private PreparedStatement addAth = null;	
-	//private String addAthString;
-	
-	//private PreparedStatement getAthIds = null;	
-	//private String getAthIdsString;
-	
-	//private boolean athIdExists;
 	
 	private ResultSet rs1;
 	private ConnectionClass cc1;
@@ -66,30 +45,6 @@ public class AthleteHandler
 		return rs1;					
 	}
 	
-	/*public ResultSet getRacesByDirEmail(String email) throws Exception
-	{
-		
-	    getDirIdString ="select director_id from director where email = ?";
-		//cc1 = new ConnectionClass();
-		conn = cc1.openConnection();
-		getDirId = conn.prepareStatement(getDirIdString);
-		getDirId.setString(1,email);
-		rs1 = getDirId.executeQuery();
-		
-		int userDirId = 0;
-		while(rs1.next())
-		{
-			userDirId = rs1.getInt(1);
-		}
-		
-		 //getUserRaceIdsString ="select race_id from director_race where race_id = ?";
-		 getUserRacesString ="select * from race,director_race WHERE race.race_id = director_race.race_id AND director_race.director_id = ?";
-		 getUserRaces = conn.prepareStatement(getUserRacesString);
-		 getUserRaces.setInt(1,userDirId);
-		 rs1 = getUserRaces.executeQuery();
-										
-		return rs1;					
-	}*/
 	
 	//method to delete an athlete in database
 	public int deleteAthlete(int athIdIn)throws Exception
@@ -161,83 +116,7 @@ public class AthleteHandler
     	return I;
     }
 	
-	/*public  void addRace(int idIn, String nameIn,String locationIn,Date dateIn,Boolean multiWaveIn,
-			int noRecSplitsIn) throws Exception 
-    {   	
-		race1 = new Race(idIn,nameIn,locationIn,dateIn,multiWaveIn,noRecSplitsIn); //to perform validation checks!!
-		    
-			addRaceString = "insert into race values(?,?,?,?,?,?)"; 
-			
-			conn = cc1.openConnection();
-       	    
-			addRace = conn.prepareStatement(addRaceString);
-			
-			addRace.setInt(1, race1.getRaceId());
-			addRace.setString(2, race1.getRaceName());
-			addRace.setString(3, race1.getRaceLocation());
-			//////////////////////////////////////////////////////
-			java.util.Date utilDate = race1.getRaceDate();
-			java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-			////////////////////////////////////////////////////////////////
-			//addRace.setDate(4, (java.sql.Date)race1.getRaceDate());
-			addRace.setDate(4, sqlDate);
-			addRace.setBoolean(5, race1.getIsMultiWave());
-			addRace.setInt(6, race1.getNoRecordedSplits());			
-       	         	          	   							        	   	    	
-			raceIdExists = validateRaceID(race1);
-			
-	        if(!raceIdExists)
-	        {
-	        	addRace.execute();
-			    JOptionPane.showMessageDialog(null, "New race saved to database.");
-	        }
-	        else
-	        {
-	        	JOptionPane.showMessageDialog(null, "race with ID number :"+race1.getRaceId()+" already exists in database!!");
-	        }  
-			
-	        rs1.close();
-	        addRace.close();
-	 }*/
 	
-	/*public boolean validateRaceID(Race race1) throws Exception
-	{
-			getRaceIdsString ="select race_id from race";
-			conn = cc1.openConnection();
-		    getRaceIds = conn.prepareStatement(getRaceIdsString);	       
-		    rs1 = getRaceIds.executeQuery();
-		    
-		    raceIdExists = false;
-		    while(rs1.next())
-		    {
-		    	if( race1.getRaceId()==rs1.getInt(1) ) 
-		    		raceIdExists = true;
-		    }
-		    
-		    return raceIdExists;
-	        
-	}*/
-	
-	/* public int getHighestRaceId() throws Exception
-	    {  		
-		 	 getRaceIdsString ="select race_id from race";
-		     conn = cc1.openConnection();
-		     getRaceIds = conn.prepareStatement(getRaceIdsString);
-		     rs1 = getRaceIds.executeQuery();
-	    	 int highestRaceId=0;
-	    	 int temp=0;
-	    	 
-	    	 while(rs1.next())
-	    	 {
-	    		  temp = rs1.getInt(1);
-	    		  if (temp > highestRaceId)
-	    			  highestRaceId = temp; 
-	         }
-	    	 rs1.close();
-	    	 getRaceIds.close();
-	    	 final int I = highestRaceId;	    	
-	    	 return I;
-	    } */
 	
 }
 

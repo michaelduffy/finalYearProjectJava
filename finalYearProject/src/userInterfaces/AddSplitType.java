@@ -37,7 +37,6 @@ public class AddSplitType extends JFrame
 			highestId++; //new splitType ID
 			cc1.closeConnection();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -69,7 +68,6 @@ public class AddSplitType extends JFrame
 					panelIn.refreshTable(); //to update table with new value
 					AddSplitType.this.dispose(); //close the add window
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -86,11 +84,5 @@ public class AddSplitType extends JFrame
 		//this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
-	
-	/*public static void main(String[] args)
-	{
-		AddSplitType s1 = new AddSplitType();
-	}*/
-	
-	
+		
 }

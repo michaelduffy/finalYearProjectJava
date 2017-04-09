@@ -2,26 +2,18 @@ package panels;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
 import databaseClasses.ConnectionClass;
 import databaseClasses.DirectorHandler;
 import tableModels.DirectorTableModel;
 import userInterfaces.AddDirector;
-
-
 
 @SuppressWarnings("serial")
 public class DirectorPanel extends JPanel
@@ -52,9 +44,7 @@ public class DirectorPanel extends JPanel
 				
 		jp1 = new JPanel();
 		jp2 = new JPanel();
-		
-		//jp2.setLayout(new GridLayout(3,1));;
-		
+				
 		btnAdd = new JButton("Add");
 		btnEdit = new JButton("Edit");
 		btnDelete = new JButton("Delete");
@@ -67,15 +57,7 @@ public class DirectorPanel extends JPanel
 		jp2.add(btnAdd);
 		jp2.add(btnEdit);
 		jp2.add(btnDelete);
-		
-		/*	btnRefresh.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent arg0) 
-			{	
 				
-			}
-		});*/
-		
 		btnAdd.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent arg0) 
@@ -120,7 +102,6 @@ public class DirectorPanel extends JPanel
 		} 
 		catch (Exception e) 
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -136,33 +117,27 @@ public class DirectorPanel extends JPanel
 				{
 				 //determine the selected rows ID
 				 selectedDirId = (int)jt1.getModel().getValueAt(rowIndex, 0);
-				 System.out.println("row selected = "+rowIndex+" ,id = "+selectedDirId);
 				 
 				 try 
 					{
 						 int result = JOptionPane.showConfirmDialog(null, "are you sure???",
 							        "alert", JOptionPane.OK_CANCEL_OPTION);
-						 System.out.println("result = "+result);
 						 if(result == 0)
 						 {
 							//call method to remove the selected row from the database
 							dh1.deleteDirector(selectedDirId);
-							//((DefaultTableModel) jt1.getModel()).removeRow(rowIndex); 
-						    //jt1.getModel())).removeRow(rowIndex); 
 							refreshTable(username,isSeriesDir);
 						 
 							JOptionPane.showMessageDialog(null, "Director with ID "+ selectedDirId+" successfully deleted from database.");
 						 }
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					//remove the deleted row from the table					
 				}
 				else
 				{
-					System.out.println("No row selected");
-					System.out.println("row selected = "+rowIndex+" ,id = "+selectedDirId);
+					//nothing
 				}								
 			}
 		}); //end of btnDelete actionListener
@@ -211,8 +186,7 @@ public class DirectorPanel extends JPanel
 				}
 				else
 				{
-					System.out.println("No row selected");
-					System.out.println("row selected = "+rowIndex+" ,id = "+selectedDirId+" ,entered value = "+newDirFName);
+					//nothing
 				}								
 			}
 		});//end of btnEdit actionListener
@@ -260,14 +234,8 @@ public class DirectorPanel extends JPanel
 				jp1.add(sp1);
 		}catch(Exception e)
 		{
-			System.out.println(e.getMessage());
+			//nothing
 		}		
 	} 
-	
-	/*public void testMethod()
-	{
-		System.out.println("test working"+jt1.getModel().getValueAt(1, 1));
-	}*/
-	
-	
+
 }

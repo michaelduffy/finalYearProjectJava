@@ -13,26 +13,19 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.jdatepicker.JDateComponentFactory;
 import org.jdatepicker.JDatePicker;
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
-
 import databaseClasses.ConnectionClass;
-import databaseClasses.DirectorHandler;
 import databaseClasses.RaceHandler;
-import panels.DirectorPanel;
 import panels.RacePanel;
 
 @SuppressWarnings("serial")
 public class AddRace extends JFrame
 {
 	private JLabel lblID,lblName,lblLocation,lblDate,lblMultipleWave,lblNoRecSplits;
-	private JTextField txtID,txtName,txtLocation,txtDate,txtNoRecSplits;
+	private JTextField txtID,txtName,txtLocation,txtNoRecSplits;
 	private JCheckBox cbMultipleWave;
 	private JButton btnAdd;
 	private JPanel p1, p2;
@@ -55,7 +48,6 @@ public class AddRace extends JFrame
 			highestId++; //new director ID
 			cc1.closeConnection();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -71,8 +63,7 @@ public class AddRace extends JFrame
 		txtID = new JTextField(""+highestId);
 		txtID.setEditable(false);
 		txtName = new JTextField();
-		txtLocation = new JTextField();
-		txtDate = new JTextField();		
+		txtLocation = new JTextField();	
 		cbMultipleWave = new JCheckBox();
 		txtNoRecSplits = new JTextField();
 		
@@ -95,9 +86,7 @@ public class AddRace extends JFrame
 		p1.add(cbMultipleWave);
 		p1.add(lblNoRecSplits);
 		p1.add(txtNoRecSplits);
-		
-		
-		
+				
 		p2 = new JPanel();
 		btnAdd = new JButton("Add New Race");
 		p2.add(btnAdd);
@@ -122,8 +111,7 @@ public class AddRace extends JFrame
 					panelIn.refreshTable(username,isSeriesDir); //to update table with new value
 					AddRace.this.dispose(); //close the add window
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 		});
@@ -139,12 +127,6 @@ public class AddRace extends JFrame
 		//this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
-	
-	/*public static void main(String[] args)
-	{
-		AddSplitType s1 = new AddSplitType();
-	}*/
-	
-	
+
 }
 

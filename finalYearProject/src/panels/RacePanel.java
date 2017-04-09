@@ -2,14 +2,10 @@ package panels;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.Date;
-import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -18,16 +14,12 @@ import javax.swing.JScrollPane;
 //import javax.swing.JSpinner.DateEditor;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import databaseClasses.ConnectionClass;
-import databaseClasses.DirectorHandler;
 import databaseClasses.RaceHandler;
 import tableModels.DateEditor;
-import tableModels.DirectorTableModel;
 import tableModels.RaceTableModel;
-import userInterfaces.AddDirector;
 import userInterfaces.AddRace;
 
 
@@ -62,8 +54,6 @@ public class RacePanel extends JPanel
 		jp1 = new JPanel();
 		jp2 = new JPanel();
 		
-		//jp2.setLayout(new GridLayout(3,1));;
-		
 		btnAdd = new JButton("Add");
 		btnEdit = new JButton("Edit");
 		btnDelete = new JButton("Delete");
@@ -76,15 +66,7 @@ public class RacePanel extends JPanel
 		jp2.add(btnAdd);
 		jp2.add(btnEdit);
 		jp2.add(btnDelete);
-		
-		/*	btnRefresh.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent arg0) 
-			{	
 				
-			}
-		});*/
-		
 		btnAdd.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent arg0) 
@@ -139,7 +121,6 @@ public class RacePanel extends JPanel
 		} 
 		catch (Exception e) 
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -155,7 +136,6 @@ public class RacePanel extends JPanel
 				{
 				 //determine the selected rows ID
 				 selectedRaceId = (int)jt1.getModel().getValueAt(rowIndex, 0);
-				 System.out.println("(racepanel)row selected = "+rowIndex+" ,id = "+selectedRaceId);
 				 
 				 try 
 					{
@@ -166,8 +146,6 @@ public class RacePanel extends JPanel
 						 {
 							//call method to remove the selected row from the database
 							rh1.deleteRace(selectedRaceId);
-							//((DefaultTableModel) jt1.getModel()).removeRow(rowIndex); 
-						    //jt1.getModel())).removeRow(rowIndex); 
 							refreshTable(username,isSeriesDir);
 						 
 							JOptionPane.showMessageDialog(null, "Race with ID "+ selectedRaceId+" successfully deleted from database.");
@@ -175,13 +153,11 @@ public class RacePanel extends JPanel
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
-					//remove the deleted row from the table					
+					}				
 				}
 				else
 				{
-					System.out.println("(racepanel)No row selected");
-					System.out.println("(racepanel)row selected = "+rowIndex+" ,id = "+selectedRaceId);
+					//do nothing
 				}								
 			}
 		}); //end of btnDelete actionListener
@@ -228,8 +204,7 @@ public class RacePanel extends JPanel
 				}
 				else
 				{
-					System.out.println("(racepanel)No row selected");
-					System.out.println("(racepanel)row selected = "+rowIndex+" ,id = "+selectedRaceId+" ,entered value = "+newName);
+					//do nothing
 				}								
 			}
 		});//end of btnEdit actionListener
@@ -241,19 +216,16 @@ public class RacePanel extends JPanel
 	//method to refresh table contents after add operations
 	public void refreshTable(String username,Boolean isSeriesDir) 
 	{
-		System.out.println("test refresh 1");
 		cc1 = new ConnectionClass(ip,dbName,dbUser,dbPass); //for purpose of closing the connection
 		
 		try {			
 				if(isSeriesDir)
 				{
 					rs1 = rh1.getRaces();
-					//System.out.println("test refresh 2");
 				}
 				else
 				{
 					rs1 = rh1.getRacesByDirEmail(username);
-					//System.out.println("test refresh 3");
 				}
 			
 				tm1 = new RaceTableModel(rs1);
@@ -261,12 +233,10 @@ public class RacePanel extends JPanel
 				if(isSeriesDir)
 				{
 					rs1 = rh1.getRaces();
-					//System.out.println("test refresh 4");
 				}
 				else
 				{
 					rs1 = rh1.getRacesByDirEmail(username);
-					//System.out.println("test refresh 5");
 				}
 				tm1.buildModel(rs1);
 				
@@ -285,8 +255,7 @@ public class RacePanel extends JPanel
 				sp1 = new JScrollPane(jt1);
 				sp1.setPreferredSize(new Dimension(1000,200));	
 				cc1.closeConnection();			
-				jp1.add(sp1);
-				System.out.println("test refresh 5");
+				jp1.add(sp1);				
 		}catch(Exception e)
 		{
 			System.out.println(e.getMessage());

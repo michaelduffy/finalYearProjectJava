@@ -1,6 +1,5 @@
 package tableModels;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,15 +7,13 @@ import java.util.Calendar;
 import java.sql.Date;
 
 import javax.swing.AbstractCellEditor;
-import javax.swing.JButton;
-import javax.swing.JColorChooser;
-import javax.swing.JDialog;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
 import org.jdatepicker.JDateComponentFactory;
 import org.jdatepicker.JDatePicker;
 
+@SuppressWarnings("serial")
 public class DateEditor extends AbstractCellEditor implements TableCellEditor,ActionListener 
 {		
 	java.util.Date d1;

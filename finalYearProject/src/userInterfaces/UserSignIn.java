@@ -69,19 +69,15 @@ public class UserSignIn extends JFrame
 			public void actionPerformed(ActionEvent arg0) 
 			{	
 				validUser = false;
-				//ip = txtIp.getText();
 				email = txtEmail.getText();
 				pass = txtPass.getText();
 				
 				cc1 = new ConnectionClass(ipIn,dbNameIn,dbUserIn,dbPassIn);
 				try {
-					//cc1.openConnection();//attempt connection to confirm details
-					//cc1.closeConnection();
-					getAllDirectorNameAndPassString ="select email, password, is_series_director, is_race_director from director";
-					//cc1 = new ConnectionClass();
-					conn = cc1.openConnection();
-					getAllDirectorNameAndPass = conn.prepareStatement(getAllDirectorNameAndPassString);
-					rs1 = getAllDirectorNameAndPass.executeQuery();
+						getAllDirectorNameAndPassString ="select email, password, is_series_director, is_race_director from director";
+						conn = cc1.openConnection();
+						getAllDirectorNameAndPass = conn.prepareStatement(getAllDirectorNameAndPassString);
+						rs1 = getAllDirectorNameAndPass.executeQuery();
 					
 					while(rs1.next())
 				    {
@@ -89,11 +85,7 @@ public class UserSignIn extends JFrame
 				    	{				    		
 				    		validUser = true;
 				    		isSeriesDir = rs1.getBoolean(3);
-				    		isRaceDir = rs1.getBoolean(4);
-				    		System.out.println("email = "+email);
-				    		System.out.println("password = "+pass);
-				    		System.out.println("series dir = = "+isSeriesDir);
-				    		System.out.println("race dir = = "+isRaceDir);
+				    		isRaceDir = rs1.getBoolean(4);				    		
 				    		break;
 				    	}
 				    }
@@ -108,9 +100,7 @@ public class UserSignIn extends JFrame
 			    		JOptionPane.showMessageDialog(null, "Incorect credentials entered");
 					
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					//JOptionPane.showMessageDialog(null, "Error!!!! encountered!!");
+					JOptionPane.showMessageDialog(null, "Error!!!! encountered!!");
 				}
 			}
 		});
@@ -126,10 +116,4 @@ public class UserSignIn extends JFrame
 		this.setVisible(true);
 	}
 	
-	/*public static void main(String[] args)
-	{
-		UserSignIn mu1 = new UserSignIn("","","","");
-		
-
-	}*/
 }

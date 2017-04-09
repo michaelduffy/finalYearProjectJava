@@ -26,6 +26,12 @@ public class DirectorHandler
 	private PreparedStatement addDirector = null;	
 	private String addDirectorString;
 	
+	private PreparedStatement dirToRace = null;	
+	private String dirToRaceString;
+	
+	private PreparedStatement getAllDirRace = null;	
+	private String getAllDirRaceString;
+	
 	private PreparedStatement getDirectorIds = null;	
 	private String getDirectorIdsString;
 	
@@ -39,6 +45,55 @@ public class DirectorHandler
 	{
 		cc1 = new ConnectionClass(ipIn,dbNameIn,dbUserIn,dbPassIn);
 		directorIdExists = false;
+	}
+	
+	public void directorToRace(int dirIdIn, int raceIdIn) throws Exception
+	{
+		conn = cc1.openConnection();
+		dirToRaceString = "insert into director_race values(?,?)"; 
+		dirToRace = conn.prepareStatement(dirToRaceString);
+		
+		dirToRace.setInt(1, dirIdIn);
+		dirToRace.setInt(2, raceIdIn);
+		
+		////////////
+		getAllDirRaceString ="select * from director_race";
+			//cc1 = new ConnectionClass();
+			//conn = cc1.openConnection();
+		
+		getAllDirRace = conn.prepareStatement(getAllDirRaceString);
+		/*getAllDirRace.setInt(1,dirIdIn);
+		getAllDirRace.setInt(2,raceIdIn);*/
+		
+		rs1 = getAllDirRace.executeQuery();
+		
+   	         	          	   							        	   	    	
+		//directorIdExists = validateDirectorID(director1);
+		
+        //if(!directorIdExists)
+       // {
+			dirToRace.execute();
+		    JOptionPane.showMessageDialog(null, "New Director saved to database.");
+       // }
+       // else
+       // {
+        //	JOptionPane.showMessageDialog(null, "Director with ID number :"+director1.getDirector_id()+" already exists in database!!");
+        //}  
+		
+       // rs1.close();
+        dirToRace.close();
+	}
+	
+	public ResultSet getDirectorIds() throws Exception
+	{
+		
+	    getDirectorIdsString ="select DISTINCT(director_id) from director";
+		//cc1 = new ConnectionClass();
+		conn = cc1.openConnection();
+		getDirectorIds = conn.prepareStatement(getDirectorIdsString);
+		rs1 = getDirectorIds.executeQuery();
+									
+		return rs1;					
 	}
 	
 	//method to return all SplitTypes in database

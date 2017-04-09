@@ -41,7 +41,6 @@ public class AddDirector extends JFrame
 			highestId++; //new director ID
 			cc1.closeConnection();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -123,11 +122,5 @@ public class AddDirector extends JFrame
 		//this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
-	
-	/*public static void main(String[] args)
-	{
-		AddSplitType s1 = new AddSplitType();
-	}*/
-	
 	
 }

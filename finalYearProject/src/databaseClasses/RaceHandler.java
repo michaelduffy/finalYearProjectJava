@@ -7,7 +7,6 @@ import java.util.Date;
 
 import javax.swing.JOptionPane;
 
-import classes.Director;
 import classes.Race;
 
 
@@ -21,10 +20,7 @@ public class RaceHandler
 	
 	private PreparedStatement getDirId = null;	
 	private String getDirIdString;
-	
-	//private PreparedStatement getUserRaceIds = null;	
-	//private String getUserRaceIdsString;
-	
+		
 	private PreparedStatement getUserRaces = null;	
 	private String getUserRacesString;
 	
@@ -50,6 +46,18 @@ public class RaceHandler
 	{
 		cc1 = new ConnectionClass(ipIn,dbNameIn,dbUserIn,dbPassIn);
 		raceIdExists = false;
+	}
+	
+	public ResultSet getRaceIds() throws Exception
+	{
+		
+	    getRaceIdsString ="select DISTINCT(race_id) from race";
+		//cc1 = new ConnectionClass();
+		conn = cc1.openConnection();
+		getRaceIds = conn.prepareStatement(getRaceIdsString);
+		rs1 = getRaceIds.executeQuery();
+									
+		return rs1;					
 	}
 	
 	//method to return all SplitTypes in database
@@ -136,9 +144,7 @@ public class RaceHandler
     	editRace.setBoolean(4, race1.getIsMultiWave());
     	editRace.setInt(5, race1.getNoRecordedSplits());
     	editRace.setInt(6, race1.getRaceId());
-    	
-    	
-    	
+    	   	
     	editCheck = editRace.executeUpdate(); //perform update and return confirmation 
     	editRace.close();
     	

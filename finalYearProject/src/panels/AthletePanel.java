@@ -60,15 +60,7 @@ public class AthletePanel extends JPanel
 						
 		jp2.add(btnEdit);
 		jp2.add(btnDelete);
-		
-		/*	btnRefresh.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent arg0) 
-			{	
-				
-			}
-		});*/
-										
+												
 		try //create a JTable and load with database values
 		{
 			cc1 = new ConnectionClass(ipIn,dbNameIn,dbUserIn,dbPassIn); //for purpose of closing the connection
@@ -94,7 +86,7 @@ public class AthletePanel extends JPanel
 			jt1.getColumnModel().getColumn(5).setPreferredWidth(80);
 			jt1.getColumnModel().getColumn(6).setPreferredWidth(40);
 			jt1.getColumnModel().getColumn(7).setPreferredWidth(40);
-			//jt1.getColumnModel().getColumn(3).setPreferredWidth(35);			
+			
 			sp1 = new JScrollPane(jt1);
 			sp1.setPreferredSize(new Dimension(1000,200));	
 			cc1.closeConnection();			
@@ -103,7 +95,6 @@ public class AthletePanel extends JPanel
 		} 
 		catch (Exception e) 
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -119,13 +110,11 @@ public class AthletePanel extends JPanel
 				{
 				 //determine the selected rows ID
 				 selectedAthId = (int)jt1.getModel().getValueAt(rowIndex, 0);
-				 System.out.println("(Athpanel)row selected = "+rowIndex+" ,id = "+selectedAthId);
 				 
 				 try 
 					{
 						 int result = JOptionPane.showConfirmDialog(null, "are you sure???",
 							        "alert", JOptionPane.OK_CANCEL_OPTION);
-						 System.out.println("result = "+result);
 						 if(result == 0)
 						 {
 							//call method to remove the selected row from the database
@@ -141,8 +130,7 @@ public class AthletePanel extends JPanel
 				}
 				else
 				{
-					System.out.println("(athpanel)No row selected");
-					System.out.println("(athpanel)row selected = "+rowIndex+" ,id = "+selectedAthId);
+					//nothing
 				}								
 			}
 		}); //end of btnDelete actionListener
@@ -185,8 +173,7 @@ public class AthletePanel extends JPanel
 					newPhone = (String) jt1.getModel().getValueAt(rowIndex, 9);
 					newEmail = (String) jt1.getModel().getValueAt(rowIndex, 10);
 					newPass = (String) jt1.getModel().getValueAt(rowIndex, 11);
-					
-					 //System.out.println("row selected = "+rowIndex+" ,id = "+SelectedSplitId+" ,entered value = "+newSplitName);					 								
+														 								
 					 try 
 						{
 							//call method to edit the selected row in the database
@@ -200,8 +187,7 @@ public class AthletePanel extends JPanel
 				}
 				else
 				{
-					System.out.println("(athpanel)No row selected");
-					System.out.println("(athpanel)row selected = "+rowIndex+" ,id = "+selectedAthId+" ,entered value = "+newFname);
+					//nothing					
 				}								
 			}
 		});//end of btnEdit actionListener
@@ -247,15 +233,9 @@ public class AthletePanel extends JPanel
 				jp1.add(sp1);
 		}catch(Exception e)
 		{
-			System.out.println(e.getMessage());
+			//nothing
 		}		
 	} 
-	
-	/*public void testMethod()
-	{
-		System.out.println("test working"+jt1.getModel().getValueAt(1, 1));
-	}*/
-	
 	
 }
 

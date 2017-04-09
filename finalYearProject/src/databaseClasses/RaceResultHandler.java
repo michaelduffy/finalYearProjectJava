@@ -3,8 +3,6 @@ package databaseClasses;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import javax.swing.JOptionPane;
 
 import java.io.BufferedReader;
@@ -42,8 +40,8 @@ public class RaceResultHandler
 	private PreparedStatement getNoSplits = null;	
 	private String getNoSplitsString;
 	
-	private PreparedStatement searchRaceId = null;	
-	private String searchRaceIdString;
+	//private PreparedStatement searchRaceId = null;	
+	//private String searchRaceIdString;
 			
 	private ResultSet rs1;
 	private ConnectionClass cc1;
